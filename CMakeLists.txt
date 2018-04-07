@@ -42,5 +42,7 @@ target_sources(app PRIVATE src/lwm2m.c)
 target_sources(app PRIVATE src/light_control.c)
 target_sources_ifdef(CONFIG_NET_L2_BT        app PRIVATE src/bluetooth.c)
 target_sources_ifdef(CONFIG_SYS_LOG_EXT_HOOK app PRIVATE src/tstamp_log.c)
+target_sources_ifdef(CONFIG_FOTA_SYSLOG_SHELL
+		     app PRIVATE src/system_log_shell.c)
 
 target_link_libraries_ifdef(CONFIG_MBEDTLS app mbedTLS)

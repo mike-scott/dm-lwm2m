@@ -84,6 +84,15 @@ config FOTA_SYSLOG_ENABLED
 	help
 	  This setting will start the syslog by default.
 
+config FOTA_SYSLOG_SHELL
+	bool "Enable shell commands to manage System Log"
+	depends on FOTA_SYSLOG_SUPPORT
+	select CONSOLE_SHELL
+	default false
+	help
+	  This setting will enable the "log" shell command to manage the
+	  System Log via UART.
+
 endif # FOTA_SYSLOG_SUPPORT
 
 config SYS_LOG_FOTA_LEVEL
