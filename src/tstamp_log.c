@@ -24,6 +24,9 @@
 #include <string.h>
 #include <flash_map.h>
 #include <fcb.h>
+#if defined(CONFIG_FOTA_LWM2M_SYSTEM_LOG_SUPPORT)
+#include <net/lwm2m.h>
+#endif
 
 #define SYSLOG_AREA_ID	0
 #define SYSLOG_MAGIC	0x12345678
@@ -172,6 +175,11 @@ static void tstamp_log_fn(const char *fmt, ...)
 
 error:
 		printk("%s", output_line);
+
+#if defined(CONFIG_FOTA_LWM2M_SYSTEM_LOG_SUPPORT)
+		/* generate notifies */
+		ipso_system_log_changed(0);
+#endif
 	} else
 #endif
 	{

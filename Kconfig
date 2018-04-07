@@ -93,6 +93,15 @@ config FOTA_SYSLOG_SHELL
 	  This setting will enable the "log" shell command to manage the
 	  System Log via UART.
 
+config FOTA_LWM2M_SYSTEM_LOG_SUPPORT
+	bool "Enable FOTA support for IPSO System Log object"
+	depends on FOTA_SYSLOG_SUPPORT
+	select LWM2M_IPSO_SYSTEM_LOG
+	default false
+	help
+	  This setting will enable LwM2M IPSO System Log support for the FOTA
+	  sample.
+
 endif # FOTA_SYSLOG_SUPPORT
 
 config SYS_LOG_FOTA_LEVEL

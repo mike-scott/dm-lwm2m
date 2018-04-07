@@ -22,6 +22,9 @@
 #include "product_id.h"
 #include "lwm2m.h"
 #include "light_control.h"
+#if defined(CONFIG_LWM2M_IPSO_SYSTEM_LOG)
+#include "lwm2m_system_log.h"
+#endif
 
 /* Defines and configs for the IPSO elements */
 #define TEMP_DEV		"fota-temp"
@@ -122,6 +125,17 @@ void main(void)
 		return;
 	}
 	_TC_END_RESULT(TC_PASS, "init_light_control");
+
+#if defined(CONFIG_LWM2M_IPSO_SYSTEM_LOG)
+	TC_PRINT("Initializing IPSO System Log\n");
+	if (init_lwm2m_system_log()) {
+		_TC_END_RESULT(TC_FAIL, "init_lwm2m_system_log");
+		TC_END_REPORT(TC_FAIL);
+		return;
+	}
+	_TC_END_RESULT(TC_PASS, "init_lwm2m_system_log");
+#endif
+
 	TC_END_REPORT(TC_PASS);
 
 	if (lwm2m_init()) {
