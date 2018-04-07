@@ -49,6 +49,43 @@ config TEMP_NRF5_NAME
 
 endif # FOTA_DEVICE_SOC_SERIES_NRF52X
 
+config FOTA_SYSLOG_SUPPORT
+	bool "Enable FOTA syslog support"
+	select SYS_LOG_EXT_HOOK
+	select FILE_SYSTEM
+	select FLASH_MAP
+	select FLASH_MAP_CUSTOM
+	select FCB
+	default n
+	help
+	  Enable this setting to support FCB-backed syslog storage.
+
+if FOTA_SYSLOG_SUPPORT
+
+config FOTA_SYSLOG_SECTOR_COUNT
+	int "System Log sector count"
+	depends on FOTA_SYSLOG_SUPPORT
+	default 2
+	help
+	  This is the number of sectors in the flash area where the syslog
+	  will be stored.
+
+config FOTA_SYSLOG_SECTOR_SIZE
+	int "System Log sector size"
+	depends on FOTA_SYSLOG_SUPPORT
+	default 4096
+	help
+	  This is the size of each syslog sector.
+
+config FOTA_SYSLOG_ENABLED
+	bool "System Log enabled at start"
+	depends on FOTA_SYSLOG_SUPPORT
+	default false
+	help
+	  This setting will start the syslog by default.
+
+endif # FOTA_SYSLOG_SUPPORT
+
 config SYS_LOG_FOTA_LEVEL
 	int "FOTA log level"
 	depends on SYS_LOG && FOTA_DEVICE

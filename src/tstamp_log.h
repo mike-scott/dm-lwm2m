@@ -17,6 +17,14 @@ static inline void tstamp_hook_install(void)
 {
 }
 #else
+#if defined(CONFIG_FOTA_SYSLOG_SUPPORT)
+u8_t get_syslog_changed(void);
+u8_t get_syslog_enable(void);
+void set_syslog_enable(u8_t enabled);
+struct fcb *get_syslog_fcb(void);
+int syslog_reset(void);
+#endif /* defined(CONFIG_FOTA_SYSLOG_SUPPORT) */
+
 /**
  * @brief Install timestamp backend hook.
  *
