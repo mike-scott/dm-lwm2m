@@ -2,12 +2,17 @@
 	partitions {
 		app_state_partition: partition@10000 {
 			label = "application-state";
-			reg = <0x00010000 0x0000f000>;
+			reg = <0x00010000 0x0000b000>;
 		};
 
-		credentials_partition: partition@1f000 {
+		credentials_partition: partition@1b000 {
 			label = "lwm2m-credentials";
-			reg = <0x0001f000 0x00001000>;
+			reg = <0x00018000 0x00001000>;
+		};
+
+		syslog_partition: partition@1c000 {
+			label = "syslog";
+			reg = <0x00019000 0x00004000>;
 		};
 	};
 };
