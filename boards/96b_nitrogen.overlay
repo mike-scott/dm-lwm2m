@@ -1,5 +1,15 @@
 &flash0 {
 	partitions {
+		scratch_partition: partition@70000 {
+			label = "image-scratch";
+			reg = <0x00070000 0x9000>;
+		};
+
+		syslog_partition: partition@79000 {
+			label = "syslog";
+			reg = <0x00079000 0x00004000>;
+		};
+
 		app_state_partition: partition@7d000 {
 			label = "application-state";
 			reg = <0x0007d000 0x2000>;
