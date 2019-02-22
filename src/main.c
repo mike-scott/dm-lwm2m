@@ -18,6 +18,11 @@ LOG_MODULE_REGISTER(LOG_MODULE_NAME);
 #include <tc_util.h>
 #include <settings/settings.h>
 
+/* Display */
+#ifdef CONFIG_LWM2M_IPSO_DISPLAY
+#include "display.h"
+#endif
+
 /* Local helpers and functions */
 #include "app_work_queue.h"
 #include "product_id.h"
@@ -26,10 +31,15 @@ LOG_MODULE_REGISTER(LOG_MODULE_NAME);
 #include "settings.h"
 
 /* Defines and configs for the IPSO elements */
-#define TEMP_DEV		"fota-temp"
+#ifdef CONFIG_HDC1008
+#define TEMP_DEV		"HDC1010"
+#define TEMP_CHAN		SENSOR_CHAN_AMBIENT_TEMP
+#else
+#define TEMP_DEV                "fota-temp"
 #define TEMP_CHAN		SENSOR_CHAN_DIE_TEMP
+#endif
 
-static struct device *die_dev;
+static struct device *temp_dev;
 static struct float32_value temp_float;
 
 static int read_temperature(struct device *temp_dev,
@@ -72,7 +82,7 @@ static void *temp_read_cb(u16_t obj_inst_id, size_t *data_len)
 	 * This is because there is currently no way to report read_cb
 	 * failures to the LWM2M engine.
 	 */
-	read_temperature(die_dev, &temp_float);
+	read_temperature(temp_dev, &temp_float);
 	lwm2m_engine_set_float32("3303/0/5700", &temp_float);
 	*data_len = sizeof(temp_float);
 
@@ -81,11 +91,11 @@ static void *temp_read_cb(u16_t obj_inst_id, size_t *data_len)
 
 static int init_temp_device(void)
 {
-	die_dev = device_get_binding(TEMP_DEV);
+	temp_dev = device_get_binding(TEMP_DEV);
 	LOG_INF("%s on-die temperature sensor %s",
-		die_dev ? "Found" : "Did not find", TEMP_DEV);
+		temp_dev ? "Found" : "Did not find", TEMP_DEV);
 
-	if (!die_dev) {
+	if (!temp_dev) {
 		LOG_ERR("No temperature device found.");
 		return -ENODEV;
 	}
@@ -122,6 +132,17 @@ void main(void)
 	}
 	Z_TC_END_RESULT(TC_PASS, "init_light_control");
 
+#ifdef CONFIG_LWM2M_IPSO_DISPLAY
+	TC_PRINT("Initializing IPSO Display\n");
+	if (init_display()) {
+		Z_TC_END_RESULT(TC_FAIL, "init_display");
+		TC_END_REPORT(TC_FAIL);
+		return;
+	}
+	Z_TC_END_RESULT(TC_PASS, "init_display");
+	TC_END_REPORT(TC_PASS);
+#endif
+
 	TC_PRINT("Initializing FOTA settings\n");
 	if (fota_settings_init()) {
 		Z_TC_END_RESULT(TC_FAIL, "fota_settings_init");
@@ -131,6 +152,11 @@ void main(void)
 
 	/* Load *all* persistent settings */
 	settings_load();
+	light_control_persist();
+
+#ifdef CONFIG_LWM2M_IPSO_DISPLAY
+	display_text_persist();
+#endif
 
 	TC_END_REPORT(TC_PASS);
 

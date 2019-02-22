@@ -9,5 +9,6 @@
 #define FOTA_LIGHT_CONTROL_H__
 
 int init_light_control(void);
+void light_control_persist(void);
 
 #endif	/* FOTA_LIGHT_CONTROL_H__ */

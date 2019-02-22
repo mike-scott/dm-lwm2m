@@ -56,5 +56,6 @@ target_sources(app PRIVATE src/lwm2m.c)
 target_sources(app PRIVATE src/settings.c)
 target_sources(app PRIVATE src/light_control.c)
 target_sources_ifdef(CONFIG_NET_L2_BT        app PRIVATE src/bluetooth.c)
+target_sources_ifdef(CONFIG_LWM2M_IPSO_DISPLAY app PRIVATE src/display.c)
 
 target_link_libraries_ifdef(CONFIG_MBEDTLS app PRIVATE mbedTLS)
