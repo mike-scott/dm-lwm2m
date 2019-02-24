@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2017 Linaro Limited
+/ * Copyright (c) 2016-2017 Linaro Limited
  * Copyright (c) 2018 Foundries.io
  *
  * SPDX-License-Identifier: Apache-2.0
@@ -65,7 +65,7 @@ static void set_bluetooth_led(bool state)
 
 	gpio = device_get_binding(BT_GPIO_CONTROLLER);
 	gpio_pin_configure(gpio, BT_GPIO_PIN, GPIO_DIR_OUT);
-	gpio_pin_write(gpio, BT_GPIO_PIN, state);
+	gpio_pin_write(gpio, BT_GPIO_PIN, IS_ENABLED(CONFIG_FOTA_LED_GPIO_INVERTED) ? !state : state);
 #endif
 }
 

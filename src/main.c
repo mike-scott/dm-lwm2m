@@ -23,6 +23,8 @@ LOG_MODULE_REGISTER(LOG_MODULE_NAME);
 #include "display.h"
 #endif
 
+#include "periphs.h"
+
 /* Local helpers and functions */
 #include "app_work_queue.h"
 #include "product_id.h"
@@ -142,6 +144,15 @@ void main(void)
 	Z_TC_END_RESULT(TC_PASS, "init_display");
 	TC_END_REPORT(TC_PASS);
 #endif
+
+  TC_PRINT("Initializing Peripherals\n");
+  if (periphs_init()) {
+    Z_TC_END_RESULT(TC_FAIL, "periphs_init");
+    TC_END_REPORT(TC_FAIL);
+    return;
+  }
+  Z_TC_END_RESULT(TC_PASS, "periphs_init");
+  TC_END_REPORT(TC_PASS);
 
 	TC_PRINT("Initializing FOTA settings\n");
 	if (fota_settings_init()) {
