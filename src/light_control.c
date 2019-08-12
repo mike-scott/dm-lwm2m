@@ -34,7 +34,8 @@ static struct device *led_dev;
 static u8_t led_current;
 
 /* TODO: Move to a pre write hook that can handle ret codes once available */
-static int on_off_cb(u16_t obj_inst_id, u8_t *data, u16_t data_len,
+static int on_off_cb(u16_t obj_inst_id, u16_t res_id, u16_t res_inst_id,
+		     u8_t *data, u16_t data_len,
 		     bool last_block, size_t total_size)
 {
 	int ret = 0;

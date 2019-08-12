@@ -110,7 +110,8 @@ static struct net_mgmt_event_callback cb;
 static struct k_work net_event_work;
 static struct k_work_q *net_event_work_q;
 
-static void *firmware_read_cb(u16_t obj_inst_id, size_t *data_len)
+static void *firmware_read_cb(u16_t obj_inst_id, u16_t res_id,
+			      u16_t res_inst_id, size_t *data_len)
 {
 	*data_len = strlen(firmware_version);
 
@@ -168,13 +169,15 @@ cleanup:
 	return ret;
 }
 
-static void *firmware_get_buf(u16_t obj_inst_id, size_t *data_len)
+static void *firmware_get_buf(u16_t obj_inst_id, u16_t res_id,
+			      u16_t res_inst_id, size_t *data_len)
 {
 	*data_len = sizeof(firmware_buf);
 	return firmware_buf;
 }
 
-static int firmware_block_received_cb(u16_t obj_inst_id,
+static int firmware_block_received_cb(u16_t obj_inst_id, u16_t res_id,
+				      u16_t res_inst_id,
 				      u8_t *data, u16_t data_len,
 				      bool last_block, size_t total_size)
 {

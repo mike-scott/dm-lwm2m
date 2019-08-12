@@ -58,7 +58,8 @@ static int read_temperature(struct device *temp_dev,
 	return 0;
 }
 
-static void *temp_read_cb(u16_t obj_inst_id, size_t *data_len)
+static void *temp_read_cb(u16_t obj_inst_id, u16_t res_id, u16_t res_inst_id,
+			  size_t *data_len)
 {
 	/* Only object instance 0 is currently used */
 	if (obj_inst_id != 0) {
