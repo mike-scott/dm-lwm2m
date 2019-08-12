@@ -34,16 +34,16 @@ int fota_update_counter_update(update_counter_t type, u32_t new_value)
 	return settings_save_one("fota/counter", &uc, sizeof(uc));
 }
 
-static int set(int argc, char **argv, void *val_ctx)
+static int set(const char *key, size_t len_rd, settings_read_cb read_cb,
+	       void *cb_arg)
 {
-	int len;
+	const char *next;
+	ssize_t len;
 
-	if (argc != 1) {
-		return -ENOENT;
-	}
+	len = settings_name_next(key, &next);
 
-	if (!strcmp(argv[0], "counter")) {
-		len = settings_val_read_cb(val_ctx, &uc, sizeof(uc));
+	if (!strncmp(key, "counter", len)) {
+		len = read_cb(cb_arg, &uc, sizeof(uc));
 		if (len < sizeof(uc)) {
 			LOG_ERR("Unable to read update counter.  Resetting.");
 			memset(&uc, 0, sizeof(uc));
@@ -55,10 +55,7 @@ static int set(int argc, char **argv, void *val_ctx)
 	return -ENOENT;
 }
 
-static struct settings_handler fota_settings = {
-	.name = "fota",
-	.h_set = set,
-};
+SETTINGS_STATIC_HANDLER_DEFINE(fota, "fota", NULL, set, NULL, NULL);
 
 int fota_settings_init(void)
 {
@@ -67,12 +64,6 @@ int fota_settings_init(void)
 	err = settings_subsys_init();
 	if (err) {
 		LOG_ERR("settings_subsys_init failed (err %d)", err);
-		return err;
-	}
-
-	err = settings_register(&fota_settings);
-	if (err) {
-		LOG_ERR("settings_register failed (err %d)", err);
 		return err;
 	}
 
