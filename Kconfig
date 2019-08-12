@@ -51,6 +51,7 @@ config FOTA_DEVICE
 	select NET_CONFIG_NEED_IPV6 if FOTA_NET_OPENTHREAD || FOTA_NET_BLE6LOWPAN || FOTA_NET_802154
 	select NET_IPV4 if FOTA_NET_MODEM
 	select NET_CONFIG_NEED_IPV4 if FOTA_NET_MODEM
+	select IMG_ERASE_PROGRESSIVELY if SOC_NRF52840
 	help
 	  Main config to enable device specific settings
 
@@ -94,16 +95,6 @@ config FOTA_LED_GPIO_INVERTED
 	help
 	  This setting is used to invert the GPIO pin settings when toggling
 	  the "Light Control" LED.
-
-config FOTA_ERASE_PROGRESSIVELY
-	bool "Erase flash progressively when updating/receiving new firmware"
-	default y if SOC_NRF52840
-	help
-	 If enabled, flash is erased as necessary when receiving and marking
-         new firmware as ok, instead of erasing the whole image slot at once.
-         This is necessary on some hardware that has long erase times, to
-         prevent long wait times at various stages where large erases are
-         performed.
 
 if FOTA_DEVICE_SOC_SERIES_NRF52X
 
