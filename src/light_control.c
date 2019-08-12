@@ -16,13 +16,19 @@ LOG_MODULE_REGISTER(LOG_MODULE_NAME);
 #include <net/lwm2m.h>
 
 /* Defines for the IPSO light-control elements */
-#define LED_GPIO_PIN		LED0_GPIO_PIN
-#define LED_GPIO_FLAGS		LED0_GPIO_FLAGS
-#if defined(LED0_GPIO_PORT)
-#define LED_GPIO_PORT		LED0_GPIO_PORT
+#ifndef DT_ALIAS_LED0_GPIOS_CONTROLLER
+#ifdef LED0_GPIO_PORT
+#define DT_ALIAS_LED0_GPIOS_CONTROLLER 	LED0_GPIO_PORT
 #else
-#define LED_GPIO_PORT		LED0_GPIO_CONTROLLER
+#define DT_ALIAS_LED0_GPIOS_CONTROLLER "(fail)"
+#define DT_ALIAS_LED0_GPIOS_PIN 0
+#define DT_ALIAS_LED0_GPIOS_FLAGS 0
 #endif
+#endif
+
+#define LED_GPIO_PORT	DT_ALIAS_LED0_GPIOS_CONTROLLER
+#define LED_GPIO_PIN	DT_ALIAS_LED0_GPIOS_PIN
+#define LED_GPIO_FLAGS	DT_ALIAS_LED0_GPIOS_FLAGS
 
 static struct device *led_dev;
 static u8_t led_current;
