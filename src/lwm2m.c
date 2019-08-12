@@ -100,6 +100,9 @@ static struct device *flash_dev;
 static struct flash_img_context dfu_ctx;
 static struct lwm2m_ctx client;
 
+/* LwM2M state */
+static int mem_total;
+
 /* storage location for firmware package */
 static u8_t firmware_buf[CONFIG_LWM2M_COAP_BLOCK_SIZE];
 /* storage location for firmware version */
@@ -377,7 +380,8 @@ static int lwm2m_setup(void)
 	lwm2m_engine_set_res_data("3/0/19", KERNEL_VERSION_STRING,
 				  sizeof(KERNEL_VERSION_STRING),
 				  LWM2M_RES_DATA_FLAG_RO);
-	lwm2m_engine_set_u32("3/0/21", (int) (FLASH_BANK_SIZE / 1024));
+	mem_total = (int)(FLASH_BANK_SIZE / 1024);
+	lwm2m_engine_set_res_data("3/0/21", &mem_total, sizeof(mem_total), 0);
 
 #ifdef CONFIG_LWM2M_FIRMWARE_UPDATE_OBJ_SUPPORT
 	/* Firmware Object callbacks */
